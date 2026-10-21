@@ -706,16 +706,15 @@ async function gemini(input,opts={},noSearch,useLite){
   if(contents[0]?.role!=="user")contents.unshift({role:"user",parts:[{text:"Ciao"}]});
   const imgs=opts.images?[].concat(...[opts.images].map(x=>x instanceof FileList?[...x]:x)):[];
   for(const f of imgs)contents[contents.length-1].parts.push({inline_data:{mime_type:f.type||"image/jpeg",data:await b64(f)}});
-  const m=MODELS(),model=(useLite||opts.modelTier==="quick")?m.lite:m.main;
-  const body={contents,generationConfig:{maxOutputTokens:opts.modelTier==="quick"?8192:32768,temperature:.7}};
+  const m=MODELS(),model=m.main;
+  const body={contents,generationConfig:{maxOutputTokens:opts.modelTier==="quick"?4096:16384}};
   if(system)body.systemInstruction={parts:[{text:system}]};
   const search=opts.search&&!noSearch;if(search)body.tools=[{google_search:{}}];
   let r;
   try{r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},body:JSON.stringify({model,body}),signal:opts.signal})}
-  catch(e){throw{code:e?.name==="AbortError"?"cancelled":"offline"}}
+  catch(e){if(e?.name==="AbortError")throw{code:"cancelled"};if(search)return gemini(input,opts,true);throw{code:"offline",message:String(e?.message||e)}}
   if(!r.ok){let msg="";try{msg=(await r.json())?.error?.message||""}catch{}
     if(r.status!==401&&search)return gemini(input,opts,true,useLite);
-    if(r.status!==401&&!useLite&&m.lite!==model)return gemini(input,opts,true,true);
     if(r.status===401)throw{code:"login"};
     if(r.status===429)throw{code:"rate_limited",message:msg};
     if(r.status===403||/api key/i.test(msg))throw{code:"server_key",message:msg};
@@ -732,7 +731,8 @@ async function gemini(input,opts={},noSearch,useLite){
         const add=arr(c?.content?.parts).filter(p=>!p.thought&&p.text).map(p=>p.text).join("");
         if(c?.finishReason)finish=c.finishReason;
         if(add){text+=add;opts.onText?.({text,delta:add})}}}
-  }catch(e){if(e?.code)throw {...e,text};throw{code:e?.name==="AbortError"?"cancelled":"upstream_error",text:text||undefined}}
+  }catch(e){if(e?.code)throw {...e,text};if(e?.name==="AbortError")throw{code:"cancelled",text:text||undefined};
+    if(search&&!text)return gemini(input,opts,true);throw{code:"upstream_error",message:"stream: "+String(e?.message||e),text:text||undefined}}
   if(["SAFETY","PROHIBITED_CONTENT","BLOCKLIST"].includes(finish)&&!text)throw{code:"refused"};
   if(!text.trim())throw{code:"empty_completion"};
   return {text,truncated:finish==="MAX_TOKENS",sources:[...sources].map(([url,title])=>({url,title}))};
