@@ -475,6 +475,19 @@ body{background:var(--bg)}
 .mcard .ptitle{font-family:var(--serif);font-weight:400}
 .mcard::before{content:"";display:block;width:52px;height:52px;border-radius:50%;margin-bottom:4px;
   background:radial-gradient(circle at 30% 28%,#fff8 0 12%,transparent 40%),conic-gradient(from 210deg,var(--accent),#f2b36b,var(--accent2),var(--accent));box-shadow:0 12px 30px -10px var(--accent)}
+
+/* composer fit on narrow phones */
+.crow{gap:6px;flex-wrap:nowrap;min-width:0}
+.crow>*{flex:none}
+.crow .go{margin-left:auto}
+#webBtn span{display:none}
+#webBtn{width:34px;padding:0;justify-content:center}
+#toolLabel{max-width:76px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cbtn select{max-width:78px}
+@media (max-width:380px){#toolBtn .i{display:none}#micBtn{display:none!important}}
+.diag{white-space:pre-wrap;font-family:var(--mono);font-size:.74rem;background:var(--sunk);border-radius:10px;padding:10px;margin:0;max-height:40vh;overflow:auto}
+.err{flex-wrap:wrap}
+.err small{flex-basis:100%;word-break:break-word}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -740,6 +753,21 @@ async function findPhotos(q,n){
     .filter(p=>p.url&&!/\.svg/i.test(p.url)&&/\.(jpe?g|png|webp)$/i.test(p.url.split("?")[0])&&(p.w||0)>=600);
 }
 async function photoFor(s){const q=s.photo||s.imagePrompt||s.title;const res=await findPhotos(q,6);if(!res.length)throw{code:"photo"};const p=res[0];s.img=p.url;s.credit=p.credit}
+/* connection self-test: readable report to screenshot */
+async function diagnose(pre){
+  const log=t=>{pre.textContent+=t+"\n"};pre.textContent="";
+  try{const r=await fetch(SERVER+"/");log("1. Server: "+(r.ok?"OK":"errore "+r.status))}catch(e){log("1. Server: non raggiungibile ("+(e.message||e)+")");return}
+  try{const r=await fetch(SERVER+"/api/models",{headers:authH()});log("2. Account e chiave: "+(r.ok?"OK":r.status===401?"account sbagliato":"errore "+r.status+" "+(await r.text()).slice(0,200)));if(r.ok)await discoverModels().catch(()=>{})}
+  catch(e){log("2. Modelli: errore "+(e.message||e))}
+  const m=MODELS();log("   Modelli: "+m.main+" / "+m.lite);
+  for(const model of [...new Set([m.main,m.lite])]){
+    try{const r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},
+        body:JSON.stringify({model,body:{contents:[{role:"user",parts:[{text:"Rispondi solo: ok"}]}]}})});
+      const t=await r.text();log("3. "+model+": "+(r.ok?"OK → "+((t.match(/"text"\s*:\s*"([^"]{0,40})/)||[])[1]||t.slice(0,120)):"errore "+r.status+" "+t.slice(0,300)))}
+    catch(e){log("3. "+model+": errore "+(e.message||e))}
+  }
+  log("Fine. Fai uno screenshot e mandalo.");
+}
 /* login dialog */
 function settings(first){
   document.querySelector(".modal")?.remove();
@@ -759,6 +787,8 @@ function settings(first){
     go.onclick=doLogin;p.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()});
     const col=h("div","mcol");col.append(u,p,go);c.append(col,st);setTimeout(()=>u.focus(),50);
   }else{
+    const dg=h("button","nav","Controlla il collegamento");dg.type="button";const pre=h("pre","diag");pre.hidden=true;
+    dg.onclick=async()=>{pre.hidden=false;dg.disabled=true;await diagnose(pre);dg.disabled=false};c.append(dg,pre);
     const out=h("button","nav","Esci");out.type="button";out.onclick=()=>{LS.set("sara_cred",null);LS.set("sara_user",null);m.remove();settings(true)};c.append(out);
   }
   if(!first){const x=h("button","tbtn mclose");x.type="button";x.setAttribute("aria-label","Chiudi");x.append(icon("i-x"));x.onclick=()=>m.remove();c.append(x)}
@@ -1305,7 +1335,7 @@ async function ask(text,forced,retryImg){
   }finally{busy=false;ctl=null;send.classList.remove("stop");send.innerHTML="";send.append(icon("i-up"));send.setAttribute("aria-label","Invia");scroll()}
 }
 function errBox(msg,code,retry){
-  const e=h("div","err");e.append(h("span",null,msg));
+  const e=h("div","err");e.append(h("span",null,msg));if(retry){const dgb=h("button",null,"Controlla");dgb.type="button";dgb.onclick=()=>{settings();setTimeout(()=>document.querySelector(".mcard .nav")?.click(),80)};e.append(dgb)}
   if(retry){const b=h("button",null,"Riprova");b.type="button";b.onclick=retry;e.append(b)}
   if(code)e.append(h("small",null,code));return e;
 }
