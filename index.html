@@ -696,6 +696,7 @@ const SERVER="https://sara.t4cnn4sfn8.workers.dev";
 const LS={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch{}}};
 const CRED=()=>LS.get("sara_cred")||"";
 const MODELS=()=>({main:LS.get("sara_m_main")||"gemini-2.5-flash",lite:LS.get("sara_m_lite")||"gemini-2.5-flash-lite"});
+const MODEL_LIST=()=>{let l=[];try{l=JSON.parse(LS.get("sara_models")||"[]")}catch{}return l.length?l:[MODELS().main,"gemini-2.5-flash","gemini-2.5-flash-lite"].filter((x,i,a)=>a.indexOf(x)===i)};
 const authH=c=>({"Authorization":"Basic "+(c||CRED())});
 function enc(u,p){return btoa(unescape(encodeURIComponent(u+":"+p)))}
 async function discoverModels(cred){
@@ -705,12 +706,12 @@ async function discoverModels(cred){
   const ok=arr(j.models).filter(m=>arr(m.supportedGenerationMethods).includes("generateContent")).map(m=>m.name.replace("models/",""))
     .filter(n=>/^gemini-\d+(\.\d+)?-flash(-lite)?(-latest)?$/.test(n)).sort((a,b)=>ver(b)-ver(a));
   const main=ok.find(n=>!n.includes("lite")),lite=ok.find(n=>n.includes("lite"))||main;
-  if(main){LS.set("sara_m_main",main);LS.set("sara_m_lite",lite)}
+  if(main){LS.set("sara_m_main",main);LS.set("sara_m_lite",lite);LS.set("sara_models",JSON.stringify([...ok.filter(n=>!n.includes("lite")),...ok.filter(n=>n.includes("lite"))].slice(0,6)))}
 }
 function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 /* one request with bounded fallbacks: no web → no thinking setting → one retry after a pause */
-async function gemini(input,opts={},noSearch,noThink,retried){
+async function gemini(input,opts={},noSearch,noThink,retried,mi=0){
   if(!CRED())throw{code:"login"};
   let turns=typeof input==="string"?[{role:"user",content:input}]:input.slice();
   let system="";if(turns.length>1&&turns[0].role==="user"&&turns[0].content===RULES){system=RULES;turns=turns.slice(1)}
@@ -720,13 +721,14 @@ async function gemini(input,opts={},noSearch,noThink,retried){
   if(contents[0]?.role!=="user")contents.unshift({role:"user",parts:[{text:"Ciao"}]});
   const imgs=opts.images?[].concat(...[opts.images].map(x=>x instanceof FileList?[...x]:x)):[];
   for(const f of imgs)contents[contents.length-1].parts.push({inline_data:{mime_type:f.type||"image/jpeg",data:await b64(f)}});
-  const model=MODELS().main,tier=opts.modelTier||"default";
+  const list=MODEL_LIST(),model=list[Math.min(mi,list.length-1)],tier=opts.modelTier||"default";
   const body={contents,generationConfig:{maxOutputTokens:tier==="quick"?4096:tier==="complex"?32768:16384}};
   if(!noThink&&tier!=="complex")body.generationConfig.thinkingConfig={thinkingLevel:"low"};
   if(system)body.systemInstruction={parts:[{text:system}]};
   const search=opts.search&&!noSearch;if(search)body.tools=[{google_search:{}}];
-  const again=async(ns,nt)=>gemini(input,opts,ns,nt,retried);
-  const later=async()=>{if(retried)return null;await wait(1500);if(opts.signal?.aborted)throw{code:"cancelled"};return gemini(input,opts,noSearch,noThink,true)};
+  const again=async(ns,nt)=>gemini(input,opts,ns,nt,retried,mi);
+  const next=()=>mi+1<Math.min(list.length,4)?gemini(input,opts,noSearch,noThink,retried,mi+1):null;
+  const later=async()=>{const n=next();if(n)return n;if(retried)return null;await wait(2000);if(opts.signal?.aborted)throw{code:"cancelled"};return gemini(input,opts,noSearch,noThink,true,0)};
   let r;
   try{r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},body:JSON.stringify({model,body}),signal:opts.signal})}
   catch(e){if(e?.name==="AbortError")throw{code:"cancelled"};if(search)return again(true,noThink);const x=await later();if(x)return x;throw{code:"offline",message:String(e?.message||e)}}
@@ -734,9 +736,9 @@ async function gemini(input,opts={},noSearch,noThink,retried){
     if(r.status===401)throw{code:"login"};
     if(r.status===400&&!noThink&&body.generationConfig.thinkingConfig)return again(noSearch,true);
     if(search)return again(true,noThink);
-    if(r.status===429)throw{code:"rate_limited",message:msg};
+    if(r.status===429){const n=next();if(n)return n;throw{code:"rate_limited",message:msg}}
     if(r.status===403||/api key/i.test(msg))throw{code:"server_key",message:msg};
-    if(r.status===404){LS.set("sara_m_main",null);throw{code:"model_missing",message:msg}}
+    if(r.status===404){const n=next();if(n)return n;LS.set("sara_m_main",null);LS.set("sara_models",null);throw{code:"model_missing",message:msg}}
     if(r.status===400&&/token|too large|exceeds/i.test(msg))throw{code:"prompt_too_large"};
     if(r.status>=500){const x=await later();if(x)return x}
     throw{code:"upstream_error",message:("HTTP "+r.status+" "+msg).trim()}}
@@ -782,7 +784,7 @@ async function diagnose(pre){
   try{const r=await fetch(SERVER+"/api/models",{headers:authH()});log("2. Account e chiave: "+(r.ok?"OK":r.status===401?"account sbagliato":"errore "+r.status+" "+(await r.text()).slice(0,200)));if(r.ok)await discoverModels().catch(()=>{})}
   catch(e){log("2. Modelli: errore "+(e.message||e))}
   const m=MODELS();log("   Modelli: "+m.main+" / "+m.lite);
-  for(const model of [...new Set([m.main,m.lite])]){
+  for(const model of MODEL_LIST().slice(0,4)){
     try{const r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},
         body:JSON.stringify({model,body:{contents:[{role:"user",parts:[{text:"Rispondi solo: ok"}]}]}})});
       const t=await r.text();log("3. "+model+": "+(r.ok?"OK → "+((t.match(/"text"\s*:\s*"([^"]{0,40})/)||[])[1]||t.slice(0,120)):"errore "+r.status+" "+t.slice(0,300)))}
