@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#faf9f5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Minerva">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cpath d='M9 15 L13.5 5.5 L20 12 Q24 10.6 28 12 L34.5 5.5 L39 15 Q44 31 34 40.5 Q24 46.5 14 40.5 Q4 31 9 15Z' fill='%23c96442'/%3E%3Ccircle cx='17.2' cy='21' r='6.6' fill='%23fff'/%3E%3Ccircle cx='30.8' cy='21' r='6.6' fill='%23fff'/%3E%3Ccircle cx='17.8' cy='21.4' r='3.1' fill='%23222'/%3E%3Ccircle cx='30.2' cy='21.4' r='3.1' fill='%23222'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-title" content="Sara">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect x='3' y='3' width='42' height='42' rx='13' fill='%23c96442'/%3E%3Cpath d='M30.5 15.5c-1.6-1.8-4-2.8-6.6-2.8-4.2 0-7.3 2.4-7.3 5.9 0 7.6 14.8 4.6 14.8 11.3 0 3.4-3.2 5.9-7.6 5.9-3 0-5.7-1.2-7.4-3.3' fill='none' stroke='%23fff' stroke-width='3.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>*,*::before,*::after{box-sizing:border-box}html{padding-top:env(safe-area-inset-top,0px)}body{margin:0;font-size:14px}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Minerva</title>
+<title>Sara</title>
 </head>
 <body>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -353,17 +353,140 @@ tr:last-child td{border-bottom:0}
 .mrow input{flex:1;min-width:0;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:10px 12px;font:inherit}
 .mcard .st2{font-size:.86rem;color:var(--muted);min-height:1.2em}
 .mclose{position:absolute;top:10px;right:10px}
+.sources{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;font-size:.78rem}
+.sources b{width:100%;font-weight:600;color:var(--muted)}
+.sources a{border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.imgf .cr{position:absolute;right:.8cqw;bottom:.8cqw;max-width:70%;font-size:.9cqw;line-height:1.2;padding:.3cqw .7cqw;border-radius:.5cqw;background:rgba(0,0,0,.55);color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+.pgrid:empty{display:none}
+.pick{border:0;padding:0;background:var(--sunk);border-radius:8px;overflow:hidden;aspect-ratio:4/3}
+.pick img{width:100%;height:100%;object-fit:cover;display:block}
+.mcol{display:flex;flex-direction:column;gap:8px}
+.mcol input{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:10px;padding:11px 12px;font:inherit}
+.mcol .primary{justify-content:center;padding:11px}
+#micBtn.on{background:var(--bad);color:#fff;border-color:transparent}
+.ib.on{color:var(--accent)}
 .toast{position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:.86rem;z-index:60;max-width:calc(100% - 32px);text-align:center}
+
+/* ===== message restyle (Sara) ===== */
+.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.top .name{font-family:var(--sans);font-weight:600;font-size:1.02rem;letter-spacing:-.01em}
+#thread{gap:28px;padding-block:18px 32px}
+.user{background:var(--sunk);border-radius:20px;padding:10px 15px;font-size:1rem;line-height:1.5;max-width:82%;box-shadow:none}
+.user .tag{display:flex;font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.prose{font-family:var(--sans);font-size:1rem;line-height:1.72;letter-spacing:-.003em;color:var(--ink)}
+.prose p{margin:0 0 .9em}
+.prose h3{font-family:var(--sans);font-weight:650;font-size:1.06rem;margin:1.3em 0 .4em;letter-spacing:-.01em}
+.prose ul,.prose ol{padding-left:1.25em}
+.prose li{margin:.35em 0;padding-left:.2em}
+.prose li::marker{color:var(--muted)}
+.prose b{font-weight:650}
+.prose .final{background:none;border:0;border-radius:0;padding:0;margin:0 0 1em;font-size:1.14rem;font-weight:650;letter-spacing:-.01em;line-height:1.45}
+.prose pre{border:1px solid var(--line);background:var(--sunk);border-radius:12px}
+.prose.streaming>*:last-child::after{content:"";display:inline-block;width:.55em;height:.55em;margin-left:.3em;border-radius:50%;background:var(--accent);vertical-align:.08em}
+@media (prefers-reduced-motion:no-preference){.prose.streaming>*:last-child::after{animation:dot 1s ease-in-out infinite}@keyframes dot{50%{transform:scale(.55);opacity:.5}}}
+.mark{display:none}
+.tools-row{gap:2px;margin-top:10px;margin-left:-8px}
+.ib{padding:7px;border-radius:9px}
+.ib .i{width:17px;height:17px}
+.think{gap:10px;font-size:.95rem}
+.think span{background:linear-gradient(90deg,var(--muted) 0%,var(--ink) 50%,var(--muted) 100%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (prefers-reduced-motion:no-preference){.think span{animation:shimmer 1.8s linear infinite}@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}}
+.spark{width:22px;height:22px}
+.sources{margin-top:14px}
+.sources a{background:var(--surface)}
+.greet{flex-direction:column;gap:14px}
+.greet svg{width:52px;height:52px;filter:drop-shadow(0 6px 18px color-mix(in srgb,var(--accent) 35%,transparent))}
+.greet h1{font-size:clamp(1.9rem,7vw,2.6rem)}
+.composer{border-radius:24px;padding:14px 14px 10px}
+.go{border-radius:12px;width:36px;height:36px}
+.acard{border-radius:16px}
+.follow button{background:var(--surface)}
+
+/* ===== Sara visual system ===== */
+:root{
+  --bg:#f7f5f0; --surface:#ffffff; --sunk:#efece5; --ink:#1c1b19; --muted:#6f6b63; --faint:#a29e95; --line:#e5e1d8;
+  --accent:#d9643a; --accent-ink:#ffffff; --accent-soft:#f8e4da; --accent2:#7b5cff; --final:transparent;
+  --shadow:0 1px 1px rgba(28,27,25,.04),0 10px 30px -12px rgba(28,27,25,.18);
+  --serif:"Source Serif 4", Georgia, serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1b1a18; --surface:#262522; --sunk:#2f2d2a; --ink:#f3f0e9; --muted:#a6a299; --faint:#78746c; --line:#393732;
+  --accent:#ef8259; --accent-ink:#1b1a18; --accent-soft:#4a2f24; --accent2:#9d88ff;
+  --shadow:0 1px 1px rgba(0,0,0,.25),0 14px 36px -14px rgba(0,0,0,.6); color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#1b1a18; --surface:#262522; --sunk:#2f2d2a; --ink:#f3f0e9; --muted:#a6a299; --faint:#78746c; --line:#393732;
+  --accent:#ef8259; --accent-ink:#1b1a18; --accent-soft:#4a2f24; --accent2:#9d88ff;
+  --shadow:0 1px 1px rgba(0,0,0,.25),0 14px 36px -14px rgba(0,0,0,.6); color-scheme:dark }
+body{background:var(--bg)}
+/* orb: Sara's mark */
+.orb{position:relative;display:inline-block;width:24px;height:24px;border-radius:50%;flex:none;overflow:hidden;
+  background:radial-gradient(circle at 30% 28%,#fff8 0 12%,transparent 40%),conic-gradient(from 210deg,var(--accent),#f2b36b,var(--accent2),var(--accent));
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.15),0 4px 14px -4px color-mix(in srgb,var(--accent) 60%,transparent)}
+.orb i{position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent 0 60%,rgba(255,255,255,.35) 75%,transparent 90%);border-radius:50%}
+.orb.big{width:64px;height:64px;box-shadow:inset 0 -8px 16px rgba(0,0,0,.15),0 18px 50px -10px color-mix(in srgb,var(--accent) 70%,transparent),0 0 0 10px color-mix(in srgb,var(--accent) 8%,transparent)}
+.think-orb{width:22px;height:22px}
+@media (prefers-reduced-motion:no-preference){
+  .orb i{animation:orbspin 6s linear infinite}
+  .orb.big{animation:breathe 4.5s ease-in-out infinite}
+  .think-orb{animation:breathe 1.2s ease-in-out infinite}
+  .think-orb i{animation-duration:1.4s}
+  @keyframes orbspin{to{transform:rotate(360deg)}}
+  @keyframes breathe{50%{transform:scale(.88)}}
+}
+/* top bar */
+.top{padding-block:10px 8px}
+.top .name{gap:9px;font-size:1.05rem}
+.newc span{display:none}
+@media (min-width:560px){.newc span{display:inline}}
+/* empty state */
+.empty{position:relative;isolation:isolate}
+.empty::before{content:"";position:absolute;inset:-10% -20% 20%;z-index:-1;pointer-events:none;
+  background:radial-gradient(40% 35% at 35% 40%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%),radial-gradient(40% 35% at 68% 48%,color-mix(in srgb,var(--accent2) 14%,transparent),transparent 70%);filter:blur(10px)}
+.greet{flex-direction:column;gap:18px}
+.greet svg{display:none}
+.greet h1{font-family:var(--serif);font-weight:400;font-size:clamp(2rem,8vw,2.9rem);line-height:1.08;letter-spacing:-.02em;text-align:center}
+.greet h1 span{display:block;font-family:var(--sans);font-size:clamp(1rem,4vw,1.15rem);font-weight:400;letter-spacing:0;color:var(--muted);margin-top:10px}
+.sugg{gap:8px}
+.sugg button{border-radius:999px;padding:8px 14px;background:color-mix(in srgb,var(--surface) 70%,transparent);backdrop-filter:blur(6px);font-size:.88rem}
+.sugg .g{color:var(--accent)}
+/* composer */
+.composer{background:var(--surface);border-radius:26px;border:1px solid var(--line);box-shadow:var(--shadow)}
+.composer:focus-within{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:var(--shadow),0 0 0 4px color-mix(in srgb,var(--accent) 10%,transparent)}
+.cbtn{border-radius:999px;height:34px}
+.cbtn.on{background:var(--accent-soft);color:var(--accent)}
+.go{border-radius:50%;width:36px;height:36px;background:var(--accent);box-shadow:0 6px 16px -6px var(--accent)}
+.go:disabled{opacity:.35}
+.hint{font-size:.72rem}
+/* messages */
+.user{background:var(--sunk);border-radius:22px 22px 6px 22px}
+.prose a{color:var(--accent)}
+.code{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:.4em 0 1em;background:var(--sunk)}
+.code .ch{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 6px 14px;font-family:var(--mono);font-size:.74rem;color:var(--muted);border-bottom:1px solid var(--line)}
+.code .cc{border:0;background:transparent;border-radius:7px;padding:4px 8px;font-size:.76rem;color:var(--muted);font-family:var(--sans)}
+.code .cc:hover{background:var(--surface);color:var(--ink)}
+.code pre{margin:0;border:0;border-radius:0;background:transparent;padding:12px 14px}
+.acard{background:var(--surface);border-radius:18px;padding:10px}
+.menu{border-radius:18px;padding:8px}
+.menu button{border-radius:12px}
+.panel{background:var(--surface)}
+.modal{background:color-mix(in srgb,#000 40%,transparent);backdrop-filter:blur(6px)}
+.mcard{border-radius:24px}
+.mcard .ptitle{font-family:var(--serif);font-weight:400}
+.mcard::before{content:"";display:block;width:52px;height:52px;border-radius:50%;margin-bottom:4px;
+  background:radial-gradient(circle at 30% 28%,#fff8 0 12%,transparent 40%),conic-gradient(from 210deg,var(--accent),#f2b36b,var(--accent2),var(--accent));box-shadow:0 12px 30px -10px var(--accent)}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="owl" viewBox="0 0 48 48">
-    <path d="M9 15 L13.5 5.5 L20 12 Q24 10.6 28 12 L34.5 5.5 L39 15 Q44 31 34 40.5 Q24 46.5 14 40.5 Q4 31 9 15Z" fill="var(--accent)"/>
-    <circle cx="17.2" cy="21" r="6.6" fill="var(--bg)"/><circle cx="30.8" cy="21" r="6.6" fill="var(--bg)"/>
-    <circle cx="17.8" cy="21.4" r="3.1" fill="var(--ink)"/><circle cx="30.2" cy="21.4" r="3.1" fill="var(--ink)"/>
-    <path d="M22.2 27.6 L24 31.8 L25.8 27.6Z" fill="var(--bg)"/>
-    <path d="M16 35 Q24 39.5 32 35" stroke="var(--bg)" stroke-width="1.6" fill="none" opacity=".55"/>
+    <rect x="3" y="3" width="42" height="42" rx="13" fill="var(--accent)"/>
+    <path d="M30.5 15.5c-1.6-1.8-4-2.8-6.6-2.8-4.2 0-7.3 2.4-7.3 5.9 0 7.6 14.8 4.6 14.8 11.3 0 3.4-3.2 5.9-7.6 5.9-3 0-5.7-1.2-7.4-3.3" fill="none" stroke="var(--bg)" stroke-width="3.6" stroke-linecap="round"/>
+    <circle cx="35.5" cy="12.5" r="2.6" fill="var(--bg)"/>
   </symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0 0-8a4 4 0 1 0 0 8M4 20c.8-3.6 4-6 8-6s7.2 2.4 8 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-18 0a9 9 0 1 1 18 0M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-voice" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9zM16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
   <symbol id="i-retry" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
@@ -378,10 +501,10 @@ tr:last-child td{border-bottom:0}
 
 <div class="app">
   <div class="top">
-    <span class="name"><svg aria-hidden="true"><use href="#owl"/></svg>Minerva</span>
+    <span class="name"><span class="orb" aria-hidden="true"><i></i></span>Sara</span>
     <span class="grow"></span>
-    <button class="tbtn" id="settingsBtn" type="button" aria-label="Impostazioni"><svg class="i"><use href="#i-tools"/></svg></button>
-    <button class="tbtn" id="newchat" type="button"><svg class="i"><use href="#i-new"/></svg>Nuova chat</button>
+    <button class="tbtn" id="settingsBtn" type="button" aria-label="Account"><svg class="i"><use href="#i-user"/></svg></button>
+    <button class="tbtn newc" id="newchat" type="button"><svg class="i"><use href="#i-new"/></svg><span>Nuova chat</span></button>
   </div>
   <div class="scroll" id="scroller">
     <div class="col" id="thread"></div>
@@ -389,20 +512,22 @@ tr:last-child td{border-bottom:0}
   <div class="dock"><div class="col">
     <form class="composer" id="form">
       <div class="attach" id="attach" hidden><div class="ph"><img id="thumb" alt="Foto allegata"><button type="button" id="unattach" aria-label="Rimuovi foto">✕</button></div></div>
-      <textarea id="q" rows="1" placeholder="Chiedi a Minerva…"></textarea>
+      <textarea id="q" rows="1" placeholder="Scrivi a Sara…"></textarea>
       <div class="sopts" id="slideOpts" hidden>
         <label for="so-n">Slide <select id="so-n"><option value="auto">Auto</option><option>6</option><option>8</option><option>10</option><option>12</option><option>15</option></select></label>
         <label for="so-theme">Tema <select id="so-theme"><option value="auto">Auto</option><option value="notte">Notte</option><option value="carta">Carta</option><option value="oceano">Oceano</option><option value="menta">Menta</option><option value="aurora">Aurora</option><option value="accademia">Accademia</option></select></label>
-        <label for="so-img" class="tg"><input type="checkbox" id="so-img" checked> Immagini AI</label>
+        <label for="so-img">Immagini <select id="so-img"><option value="foto">Foto vere</option><option value="ai">Disegni AI</option><option value="none">Nessuna</option></select></label>
       </div>
       <div class="crow">
         <label class="cbtn sq" id="photoBtn" title="Aggiungi foto"><input type="file" id="file" accept="image/*"><svg class="i"><use href="#i-plus"/></svg><span class="sr">Aggiungi foto</span></label>
+        <button class="cbtn on" id="webBtn" type="button" aria-pressed="true" title="Cerca su Google"><svg class="i"><use href="#i-globe"/></svg><span>Web</span></button>
+        <button class="cbtn sq" id="micBtn" type="button" aria-label="Detta a voce" hidden><svg class="i"><use href="#i-mic"/></svg></button>
         <button class="cbtn" id="toolBtn" type="button" aria-haspopup="menu"><svg class="i"><use href="#i-tools"/></svg><span id="toolLabel">Strumenti</span></button>
         <label class="cbtn" for="power" title="Potenza"><select id="power"><option value="quick">Veloce</option><option value="default" selected>Normale</option></select></label>
         <button class="go" id="send" type="submit" aria-label="Invia"><svg class="i"><use href="#i-up"/></svg></button>
       </div>
     </form>
-    <div class="hint">Minerva può sbagliare. Ricontrolla le risposte importanti.</div>
+    <div class="hint">Sara è un'AI e può sbagliare. Ricontrolla le cose importanti.</div>
   </div></div>
 </div>
 
@@ -419,8 +544,9 @@ tr:last-child td{border-bottom:0}
 /* ===== tools ===== */
 const TOOLS={
   auto:{n:"Automatico",g:"✦",hint:"Capisco io cosa ti serve"},
+  chat:{n:"Chat",g:"✦",hint:"Risposta libera"},
   risolvi:{n:"Risolvi",g:"=",hint:"Soluzione completa, subito",ex:"Risolvi 2x² − 5x + 2 = 0"},
-  spiega:{n:"Spiega",g:"?",hint:"Passo passo, con esempi",ex:"Spiegami le derivate partendo da zero"},
+  spiega:{n:"Impara",g:"?",hint:"Spiegazioni chiare con esempi",ex:"Spiegami come funziona l'intelligenza artificiale"},
   schema:{n:"Schema",g:"◇",hint:"Mappa concettuale",ex:"Schema sulla Prima guerra mondiale",art:1},
   slides:{n:"Presentazione",g:"▭",hint:"Slide pronte + PowerPoint",ex:"Presentazione sul ciclo dell'acqua",art:1},
   riassunto:{n:"Riassunto",g:"≡",hint:"I concetti chiave in breve",ex:"Riassumi il Romanticismo italiano"},
@@ -428,9 +554,9 @@ const TOOLS={
   flash:{n:"Flashcard",g:"⇄",hint:"Carte per ripassare",ex:"Flashcard sui verbi irregolari inglesi",art:1},
   tabella:{n:"Tabella",g:"▦",hint:"Confronti in colonne",ex:"Tabella di confronto tra Illuminismo e Romanticismo",art:1},
   timeline:{n:"Linea del tempo",g:"↦",hint:"Eventi in ordine",ex:"Linea del tempo della Rivoluzione francese",art:1},
-  scrivi:{n:"Scrivi",g:"✎",hint:"Temi, testi, email",ex:"Scrivi un tema di 400 parole sull'ambiente"}
+  scrivi:{n:"Scrivi",g:"✎",hint:"Testi, email, messaggi, temi",ex:"Scrivi un messaggio carino per il compleanno di un'amica"}
 };
-const SUGG=["risolvi","schema","slides","quiz","riassunto"];
+const SUGG=["scrivi","spiega","slides","risolvi","schema"];
 function detect(t){
   const s=t.toLowerCase();
   if(/presentazion|slide|power ?point|diapositiv/.test(s))return"slides";
@@ -441,8 +567,9 @@ function detect(t){
   if(/linea del tempo|timeline|cronologia/.test(s))return"timeline";
   if(/riassun|riassum|sintesi/.test(s))return"riassunto";
   if(/^(scrivi|scrivimi)|tema su|tema di|relazione su|email|lettera/.test(s))return"scrivi";
-  if(/spiega|perché|perche|non capisco|come funziona/.test(s))return"spiega";
-  return"risolvi";
+  if(/^(spiegami|spiega)\b|non capisco/.test(s))return"spiega";
+  if(/risolvi|esercizi|calcola|equazion|problema|deriva|integrale|\d\s*[=+×*\/^-]\s*\d|[a-z]\s*[=²]/.test(s))return"risolvi";
+  return"chat";
 }
 /* ===== presentation design system ===== */
 const ICONS={
@@ -490,9 +617,9 @@ const THEMES={
 };
 const KINDS=["cover","hero","image","section","bullets","cards","compare","stats","steps","chart","quote","closing"];
 const SLIDE_SCHEMA='Ogni slide è un oggetto con "kind" e i campi del suo layout:\n'+
- '{"kind":"cover","title":"...","subtitle":"...","icon":"...","image":"descrizione dettagliata di un\'illustrazione (opzionale)"}\n'+
- '{"kind":"hero","title":"...","subtitle":"...","image":"descrizione dettagliata di un\'illustrazione"}  (immagine a tutto schermo con titolo)\n'+
- '{"kind":"image","title":"...","bullets":["..."],"image":"descrizione dettagliata di un\'illustrazione"}  (immagine a sinistra, testo a destra)\n'+
+ '{"kind":"cover","title":"...","subtitle":"...","icon":"...","image":"descrizione dettagliata dell\'immagine (opzionale)","photo":"2-4 parole chiave IN INGLESE per cercare una foto reale (opzionale)"}\n'+
+ '{"kind":"hero","title":"...","subtitle":"...","image":"descrizione dettagliata dell\'immagine","photo":"2-4 parole chiave IN INGLESE per una foto reale, es. Colosseum Rome"}  (immagine a tutto schermo con titolo)\n'+
+ '{"kind":"image","title":"...","bullets":["..."],"image":"descrizione dettagliata dell\'immagine","photo":"2-4 parole chiave IN INGLESE per una foto reale"}  (immagine a sinistra, testo a destra)\n'+
  '{"kind":"section","title":"...","subtitle":"..."}  (apre un capitolo)\n'+
  '{"kind":"bullets","title":"...","bullets":["...","...","..."],"icon":"..."}  (3-5 punti, max 12 parole)\n'+
  '{"kind":"cards","title":"...","cards":[{"icon":"...","title":"...","text":"max 16 parole"}]}  (3-4 card)\n'+
@@ -505,6 +632,7 @@ const SLIDE_SCHEMA='Ogni slide è un oggetto con "kind" e i campi del suo layout
  'Ogni slide ha anche "notes": 1-2 frasi da dire a voce. Nei testi non usare mai virgolette doppie: usa « » oppure apostrofi. "icon" è uno tra: '+ICON_NAMES.join(", ")+'.';
 const JS="Rispondi SOLO con JSON valido e compatto (nessun testo prima o dopo, nessun ```), testi in italiano. Dentro i testi non usare virgolette doppie (usa « »). Struttura esatta:\n";
 const FORMAT={
+  chat:"Rispondi in modo naturale, come un'amica esperta: diretta, precisa e con un tono caldo. Lunghezza adatta alla domanda: breve per le domande semplici, completa e ben organizzata (titoletti \"### \", elenchi) per quelle complesse.",
   risolvi:"Dai SUBITO la soluzione completa e corretta. Prima riga: \"> \" + risposta finale. Poi lo svolgimento pulito, come in bella copia, con i passaggi chiave. Più esercizi (anche in foto): risolvili tutti, numerati, ognuno con la sua riga \"> \". Domande di teoria: risposta completa e diretta.",
   spiega:"Spiega in modo chiarissimo, un passo alla volta, con un esempio concreto e un'analogia se aiuta. Titoletti \"### \" per le parti. Chiudi con una riga \"> \" che riassume l'idea chiave.",
   riassunto:"Riassunto ben organizzato: titoletti \"### \", elenchi puntati, **grassetto** sui concetti chiave, date e nomi importanti. Chiudi con \"> In breve: \" + una frase.",
@@ -516,7 +644,7 @@ const FORMAT={
   tabella:JS+'{"title":"...","columns":["...","..."],"rows":[["...","..."]],"note":"..."}\nLa prima colonna identifica la riga. Celle concise.',
   timeline:JS+'{"title":"...","events":[{"date":"...","title":"...","text":"max 22 parole"}]}\nOrdine cronologico, 6-12 eventi.'
 };
-const RULES="Sei Minerva, un'assistente per lo studio bravissima in tutte le materie di scuola e università. Rispondi in italiano (salvo esercizi in altre lingue). Vai dritta al punto: niente premesse, niente domande per far ragionare, fai quello che ti viene chiesto. Controlla calcoli e fatti. Se c'è una foto, leggila con attenzione. Formule in testo semplice con simboli Unicode (x², √, π, ≤, →, ·), mai LaTeX. **Grassetto** per le parole chiave.";
+const RULES="Sei Sara, un'assistente AI brillante, calda e capace, esperta in qualsiasi campo: studio e scuola, scrittura, lavoro, programmazione, cucina, viaggi, consigli, idee, curiosità. Rispondi nella lingua dell'utente (di solito italiano). Vai dritta al punto: risposte chiare, utili e complete, niente premesse inutili e niente domande per far ragionare; fai quello che ti viene chiesto. Controlla calcoli e fatti. Se c'è una foto, leggila con attenzione. Formule in testo semplice con simboli Unicode (x², √, π, ≤, →, ·), mai LaTeX. **Grassetto** per le parole chiave. Il codice va sempre in blocchi ``` con il linguaggio.";
 const FOLLOW={
   text:[["Spiegamelo passo passo","spiega"],["Fanne uno schema","schema"],["Crea una presentazione","slides"],["Quiz su questo","quiz"]],
   schema:[["Fanne una presentazione","slides"],["Quiz su questo","quiz"],["Flashcard","flash"]],
@@ -527,9 +655,9 @@ const FOLLOW={
   timeline:[["Crea una presentazione","slides"],["Quiz su questo","quiz"]]
 };
 const ERR={not_granted:"Serve il permesso per usare Claude. Ricarica la pagina e premi Consenti.",
-  sampling_disabled:"Claude non è disponibile per questo account.",rate_limited:"Limite del piano gratuito raggiunto: aspetta un minuto e riprova (se succede spesso, usa la potenza Veloce).",
+  sampling_disabled:"Claude non è disponibile per questo account.",rate_limited:"Limite gratuito raggiunto: aspetta un minuto e riprova. Se continua, è finita la quota di oggi (si azzera la mattina).",
   session_expired:"Devi accedere di nuovo.",refused:"Su questa richiesta non posso aiutarti. Prova a riformularla.",
-  prompt_too_large:"La conversazione è troppo lunga. Inizia una nuova chat.",parse:"Il risultato è arrivato incompleto.",truncated:"Era troppo lungo e si è interrotto. Prova con meno slide o domande.",svg:"Immagine non riuscita, riprova.",unavailable:"Aggiungi la tua chiave nelle impostazioni.",no_key:"Aggiungi la tua chiave Gemini nelle impostazioni.",bad_key:"La chiave non funziona. Controllala nelle impostazioni.",model_missing:"Il modello è cambiato: riprova, lo aggiorno da sola.",
+  prompt_too_large:"La conversazione è troppo lunga. Inizia una nuova chat.",parse:"Il risultato è arrivato incompleto.",truncated:"Era troppo lungo e si è interrotto. Prova con meno slide o domande.",svg:"Immagine non riuscita, riprova.",unavailable:"Aggiungi la tua chiave nelle impostazioni.",login:"Devi accedere di nuovo.",offline:"Non riesco a collegarmi al server. Controlla la connessione.",server_key:"La chiave sul server non funziona: controlla GEMINI_KEY su Cloudflare.",photo:"Nessuna foto trovata.",model_missing:"Il modello è cambiato: riprova, lo aggiorno da sola.",
   image_rejected:"Non riesco a leggere questa foto. Prova con un'altra immagine.",images_unavailable:"Qui non posso ricevere foto: scrivi il testo.",
   empty_completion:"Non è arrivata nessuna risposta."};
 
@@ -538,24 +666,25 @@ let tool="auto",turns=[],busy=false,ctl=null,photo=null,current=null;
 const $=s=>document.querySelector(s),thread=$("#thread"),q=$("#q"),send=$("#send");
 const h=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e};
 const icon=id=>{const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("class","i");const u=document.createElementNS("http://www.w3.org/2000/svg","use");u.setAttribute("href","#"+id);s.append(u);return s};
-/* ===== Gemini engine (standalone) ===== */
+/* ===== Gemini engine via Sara's server ===== */
+const SERVER="https://sara.t4cnn4sfn8.workers.dev";
 const LS={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch{}}};
-const API="https://generativelanguage.googleapis.com/v1beta/";
-const KEY=()=>LS.get("minerva_key")||"";
-const MODELS=()=>({main:LS.get("minerva_m_main")||"gemini-2.5-flash",lite:LS.get("minerva_m_lite")||"gemini-2.5-flash-lite"});
-async function discoverModels(key){
-  const r=await fetch(API+"models?pageSize=200&key="+encodeURIComponent(key));
-  if(!r.ok)throw{code:r.status===400||r.status===403?"bad_key":"upstream_error"};
+const CRED=()=>LS.get("sara_cred")||"";
+const MODELS=()=>({main:LS.get("sara_m_main")||"gemini-2.5-flash",lite:LS.get("sara_m_lite")||"gemini-2.5-flash-lite"});
+const authH=c=>({"Authorization":"Basic "+(c||CRED())});
+function enc(u,p){return btoa(unescape(encodeURIComponent(u+":"+p)))}
+async function discoverModels(cred){
+  let r;try{r=await fetch(SERVER+"/api/models",{headers:authH(cred)})}catch{throw{code:"offline"}}
+  if(r.status===401)throw{code:"login"};if(!r.ok)throw{code:"upstream_error"};
   const j=await r.json();const ver=n=>parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/)||[])[1]||0);
   const ok=arr(j.models).filter(m=>arr(m.supportedGenerationMethods).includes("generateContent")).map(m=>m.name.replace("models/",""))
     .filter(n=>/^gemini-\d+(\.\d+)?-flash(-lite)?(-latest)?$/.test(n)).sort((a,b)=>ver(b)-ver(a));
   const main=ok.find(n=>!n.includes("lite")),lite=ok.find(n=>n.includes("lite"))||main;
-  if(main){LS.set("minerva_m_main",main);LS.set("minerva_m_lite",lite)}
-  return {main:main||MODELS().main,lite:lite||MODELS().lite};
+  if(main){LS.set("sara_m_main",main);LS.set("sara_m_lite",lite)}
 }
 function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
-async function gemini(input,opts={}){
-  const key=KEY();if(!key)throw{code:"no_key"};
+async function gemini(input,opts={},noSearch){
+  if(!CRED())throw{code:"login"};
   let turns=typeof input==="string"?[{role:"user",content:input}]:input.slice();
   let system="";if(turns.length>1&&turns[0].role==="user"&&turns[0].content===RULES){system=RULES;turns=turns.slice(1)}
   const contents=[];
@@ -567,68 +696,102 @@ async function gemini(input,opts={}){
   const m=MODELS(),model=opts.modelTier==="quick"?m.lite:m.main;
   const body={contents,generationConfig:{maxOutputTokens:opts.modelTier==="quick"?8192:32768,temperature:.7}};
   if(system)body.systemInstruction={parts:[{text:system}]};
+  const search=opts.search&&!noSearch;if(search)body.tools=[{google_search:{}}];
   let r;
-  try{r=await fetch(API+"models/"+model+":streamGenerateContent?alt=sse&key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:opts.signal})}
-  catch(e){throw{code:e?.name==="AbortError"?"cancelled":"upstream_error"}}
+  try{r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},body:JSON.stringify({model,body}),signal:opts.signal})}
+  catch(e){throw{code:e?.name==="AbortError"?"cancelled":"offline"}}
   if(!r.ok){let msg="";try{msg=(await r.json())?.error?.message||""}catch{}
+    if(search&&(r.status===400||r.status===429||r.status===403))return gemini(input,opts,true);
+    if(r.status===401)throw{code:"login"};
     if(r.status===429)throw{code:"rate_limited",message:msg};
-    if(r.status===400&&/api key/i.test(msg)||r.status===403)throw{code:"bad_key",message:msg};
-    if(r.status===404){LS.set("minerva_m_main",null);LS.set("minerva_m_lite",null);throw{code:"model_missing",message:msg}}
+    if(r.status===403||/api key/i.test(msg))throw{code:"server_key",message:msg};
+    if(r.status===404){LS.set("sara_m_main",null);LS.set("sara_m_lite",null);throw{code:"model_missing",message:msg}}
     if(r.status===400&&/token|too large|exceeds/i.test(msg))throw{code:"prompt_too_large"};
     throw{code:"upstream_error",message:msg}}
-  const rd=r.body.getReader(),dec=new TextDecoder();let buf="",text="",finish="";
+  const rd=r.body.getReader(),dec=new TextDecoder();let buf="",text="",finish="";const sources=new Map();
   try{
     for(;;){const {value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});
       let nl;while((nl=buf.indexOf("\n"))>=0){const line=buf.slice(0,nl).trim();buf=buf.slice(nl+1);
         if(!line.startsWith("data:"))continue;let j;try{j=JSON.parse(line.slice(5))}catch{continue}
         const c=j.candidates?.[0];if(j.promptFeedback?.blockReason)throw{code:"refused"};
+        arr(c?.groundingMetadata?.groundingChunks).forEach(g=>{if(g.web?.uri)sources.set(g.web.uri,g.web.title||g.web.uri)});
         const add=arr(c?.content?.parts).filter(p=>!p.thought&&p.text).map(p=>p.text).join("");
         if(c?.finishReason)finish=c.finishReason;
         if(add){text+=add;opts.onText?.({text,delta:add})}}}
   }catch(e){if(e?.code)throw {...e,text};throw{code:e?.name==="AbortError"?"cancelled":"upstream_error",text:text||undefined}}
   if(["SAFETY","PROHIBITED_CONTENT","BLOCKLIST"].includes(finish)&&!text)throw{code:"refused"};
   if(!text.trim())throw{code:"empty_completion"};
-  return {text,truncated:finish==="MAX_TOKENS"};
+  return {text,truncated:finish==="MAX_TOKENS",sources:[...sources].map(([url,title])=>({url,title}))};
 }
-/* thenable: every await re-checks whether a key is set */
-const sampleReady={then(res){res(KEY()?gemini:null)}};
+const sampleReady={then(res){res(CRED()?gemini:null)}};
 const downloadsReady=Promise.resolve({save:async({filename,data})=>{
   const type=filename.endsWith(".csv")?"text/csv;charset=utf-8":filename.endsWith(".pptx")?"application/vnd.openxmlformats-officedocument.presentationml.presentation":"application/octet-stream";
   const blob=data instanceof Blob?data:new Blob([data],{type});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;
   document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);return{status:"saved"}}});
-/* settings dialog */
+/* real photos from Wikimedia Commons (free licences) */
+async function findPhotos(q,n){
+  const u="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit="+(n||8)+
+    "&gsrsearch="+encodeURIComponent(q+" filetype:bitmap")+"&prop=imageinfo&iiprop=url|extmetadata|size&iiurlwidth=1280";
+  const r=await fetch(u);if(!r.ok)throw{code:"photo"};const j=await r.json();
+  return Object.values(j.query?.pages||{}).sort((a,b)=>(a.index||0)-(b.index||0)).map(p=>{const ii=p.imageinfo?.[0]||{},md=ii.extmetadata||{};
+    const strip=s=>String(s||"").replace(/<[^>]+>/g,"").trim();
+    return{url:ii.thumburl||ii.url,w:ii.width,h:ii.height,credit:(strip(md.Artist?.value)||"Wikimedia Commons").slice(0,60)+(md.LicenseShortName?.value?" · "+strip(md.LicenseShortName.value):"")}})
+    .filter(p=>p.url&&!/\.svg/i.test(p.url)&&/\.(jpe?g|png|webp)$/i.test(p.url.split("?")[0])&&(p.w||0)>=600);
+}
+async function photoFor(s){const q=s.photo||s.imagePrompt||s.title;const res=await findPhotos(q,6);if(!res.length)throw{code:"photo"};const p=res[0];s.img=p.url;s.credit=p.credit}
+/* login dialog */
 function settings(first){
   document.querySelector(".modal")?.remove();
   const m=h("div","modal");const c=h("div","mcard");
-  c.append(h("h2","ptitle",first?"Configuriamo Minerva":"Impostazioni"),
-    h("p","psub","Minerva usa l'AI gratuita di Google (Gemini). Ti serve una chiave personale: è gratis e si crea in un minuto."));
-  const steps=h("ol","msteps");
-  const li1=h("li");li1.append(document.createTextNode("Apri "));const a=h("a",null,"aistudio.google.com/apikey");a.href="https://aistudio.google.com/apikey";a.target="_blank";a.rel="noopener";li1.append(a,document.createTextNode(" ed entra con il tuo account Google."));
-  steps.append(li1,h("li",null,"Premi «Create API key» e copia la chiave."),h("li",null,"Incollala qui sotto e premi Salva."));
-  const inp=h("input");inp.id="key-input";inp.type="password";inp.placeholder="Incolla la chiave (inizia con AIza…)";inp.value=KEY();inp.autocomplete="off";
+  const logged=!!CRED();
+  c.append(h("h2","ptitle",logged?"Il tuo account":"Accedi a Sara"),h("p","psub",logged?"Sei dentro come "+(LS.get("sara_user")||"utente")+".":"Inserisci nome utente e password che ti hanno dato."));
   const st=h("div","st2");
-  const save=h("button","primary","Salva");save.type="button";
-  save.onclick=async()=>{const k=inp.value.trim();if(!k){st.textContent="Incolla prima la chiave.";return}
-    save.disabled=true;st.textContent="Controllo la chiave…";
-    try{const md=await discoverModels(k);LS.set("minerva_key",k);st.textContent="Fatto! Modello: "+md.main;setTimeout(()=>m.remove(),700)}
-    catch(e){st.textContent=e?.code==="bad_key"?"La chiave non funziona: ricontrolla di averla copiata tutta.":"Non riesco a contattare Google. Controlla la connessione."}
-    finally{save.disabled=false}};
-  const row=h("div","mrow");row.append(inp,save);
-  const priv=h("p","tip","La chiave resta salvata solo su questo dispositivo, non viene inviata a nessuno tranne Google.");
-  c.append(steps,row,st,priv);
-  if(KEY()){const rm=h("button","nav","Rimuovi chiave");rm.type="button";rm.onclick=()=>{LS.set("minerva_key",null);inp.value="";st.textContent="Chiave rimossa."};c.append(rm)}
+  if(!logged){
+    const u=h("input");u.id="login-user";u.placeholder="Nome utente";u.autocomplete="username";u.autocapitalize="none";
+    const p=h("input");p.id="login-pass";p.type="password";p.placeholder="Password";p.autocomplete="current-password";
+    const go=h("button","primary","Entra");go.type="button";
+    const doLogin=async()=>{const cu=u.value.trim(),cp=p.value;if(!cu||!cp){st.textContent="Scrivi nome utente e password.";return}
+      go.disabled=true;st.textContent="Controllo…";const cred=enc(cu,cp);
+      try{await discoverModels(cred);LS.set("sara_cred",cred);LS.set("sara_user",cu);st.textContent="Fatto!";setTimeout(()=>m.remove(),500)}
+      catch(e){st.textContent=e?.code==="login"?"Nome utente o password sbagliati.":"Non riesco a collegarmi al server. Riprova tra poco."}
+      finally{go.disabled=false}};
+    go.onclick=doLogin;p.addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()});
+    const col=h("div","mcol");col.append(u,p,go);c.append(col,st);setTimeout(()=>u.focus(),50);
+  }else{
+    const out=h("button","nav","Esci");out.type="button";out.onclick=()=>{LS.set("sara_cred",null);LS.set("sara_user",null);m.remove();settings(true)};c.append(out);
+  }
   if(!first){const x=h("button","tbtn mclose");x.type="button";x.setAttribute("aria-label","Chiudi");x.append(icon("i-x"));x.onclick=()=>m.remove();c.append(x)}
-  m.append(c);document.body.append(m);setTimeout(()=>inp.focus(),50);
+  m.append(c);document.body.append(m);
+}
+/* voice */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+let rec=null;
+function dictate(btn){
+  if(rec){rec.stop();return}
+  rec=new SR();rec.lang="it-IT";rec.interimResults=true;rec.continuous=false;const base=q.value?q.value.trimEnd()+" ":"";
+  btn.classList.add("on");
+  rec.onresult=e=>{let t="";for(const r of e.results)t+=r[0].transcript;q.value=base+t;autosize()};
+  rec.onerror=e=>{if(e.error==="not-allowed")toast("Consenti l'uso del microfono nelle impostazioni del browser.")};
+  rec.onend=()=>{rec=null;btn.classList.remove("on");q.focus()};
+  try{rec.start()}catch{rec=null;btn.classList.remove("on")}
+}
+function speak(text,btn){
+  const ss=window.speechSynthesis;if(!ss){toast("Lettura non disponibile su questo browser.");return}
+  if(ss.speaking){ss.cancel();btn.classList.remove("on");return}
+  const clean=text.replace(/[#>*`_]/g,"").replace(/\n+/g,". ");
+  const u=new SpeechSynthesisUtterance(clean);u.lang="it-IT";const v=ss.getVoices().find(v=>v.lang?.startsWith("it"));if(v)u.voice=v;
+  u.onend=u.onerror=()=>btn.classList.remove("on");btn.classList.add("on");ss.speak(u);
 }
 
 function toast(t){const e=h("div","toast",t);document.body.append(e);setTimeout(()=>e.remove(),2800)}
 function scroll(){const s=$("#scroller");s.scrollTop=s.scrollHeight}
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace(/`([^`]+)`/g,"<code>$1</code>").replace(/(^|[^*])\*([^*\n]+)\*/g,"$1<i>$2</i>")}
+function codeBlock(c,lang){return '<div class="code"><div class="ch"><span>'+esc(lang||"codice")+'</span><button type="button" class="cc">Copia</button></div><pre><code>'+esc(c.join("\n"))+"</code></pre></div>"}
 function md(t){
-  const out=[];let list=null,code=null;const close=()=>{if(list){out.push("</"+list+">");list=null}};
+  const out=[];let list=null,code=null,lang="";const close=()=>{if(list){out.push("</"+list+">");list=null}};
   for(const raw of t.split("\n")){const l=raw.trimEnd();let m;
-    if(l.startsWith("```")){if(code===null){close();code=[]}else{out.push("<pre><code>"+esc(code.join("\n"))+"</code></pre>");code=null}continue}
+    if(l.startsWith("```")){if(code===null){close();code=[];lang=l.slice(3).trim()}else{out.push(codeBlock(code,lang));code=null}continue}
     if(code!==null){code.push(raw);continue}
     if((m=l.match(/^\s*[-*•]\s+(.*)/))){if(list!=="ul"){close();out.push("<ul>");list="ul"}out.push("<li>"+inline(m[1])+"</li>");continue}
     if((m=l.match(/^\s*\d+[.)]\s+(.*)/))){if(list!=="ol"){close();out.push("<ol>");list="ol"}out.push("<li>"+inline(m[1])+"</li>");continue}
@@ -637,7 +800,7 @@ function md(t){
     if((m=l.match(/^>\s*(.*)/))){out.push('<div class="final">'+inline(m[1])+"</div>");continue}
     out.push("<p>"+inline(l)+"</p>");
   }
-  close();if(code!==null)out.push("<pre><code>"+esc(code.join("\n"))+"</code></pre>");return out.join("");
+  close();if(code!==null)out.push(codeBlock(code,lang));return out.join("");
 }
 function parseJSON(t){
   let s=String(t||"").trim();const f=s.match(/```(?:json)?\s*([\s\S]*?)```/);if(f)s=f[1];
@@ -663,11 +826,11 @@ function csv(rows){return "﻿"+rows.map(r=>arr(r).map(c=>'"'+str(c).replace(/"/
 
 /* ===== shell ===== */
 function greeting(){const hr=new Date().getHours();return hr<12?"Buongiorno":hr<18?"Buon pomeriggio":"Buonasera"}
-function setTool(k){tool=k;$("#slideOpts").hidden=k!=="slides";$("#toolLabel").textContent=k==="auto"?"Strumenti":TOOLS[k].n;$("#toolBtn").classList.toggle("on",k!=="auto");q.placeholder=TOOLS[k].ex?"Es. "+TOOLS[k].ex:"Chiedi a Minerva…"}
+function setTool(k){tool=k;$("#slideOpts").hidden=k!=="slides";$("#toolLabel").textContent=k==="auto"?"Strumenti":TOOLS[k].n;$("#toolBtn").classList.toggle("on",k!=="auto");q.placeholder=TOOLS[k].ex?"Es. "+TOOLS[k].ex:"Scrivi a Sara…"}
 function emptyState(){
   thread.innerHTML="";$("#scroller").scrollTop=0;
   const e=h("div","empty");const g=h("div","greet");
-  g.innerHTML='<svg aria-hidden="true"><use href="#owl"/></svg>';g.append(h("h1",null,greeting()+", cosa studiamo?"));
+  g.innerHTML='<div class="orb big" aria-hidden="true"><i></i></div>';const hh=h("h1");hh.append(document.createTextNode(greeting()+(LS.get("sara_user")?", "+LS.get("sara_user"):"")),h("span",null,"Come posso aiutarti oggi?"));g.append(hh);
   const sg=h("div","sugg");
   SUGG.forEach(k=>{const b=h("button");b.type="button";b.append(h("span","g",TOOLS[k].g),document.createTextNode(TOOLS[k].n));
     b.onclick=()=>{setTool(k);q.value=TOOLS[k].ex;autosize();q.focus();q.select()};sg.append(b)});
@@ -677,7 +840,7 @@ function emptyState(){
 function toolsMenu(){
   const old=document.querySelector(".menu");if(old){old.remove();return}
   const m=h("div","menu");m.setAttribute("role","menu");
-  Object.entries(TOOLS).forEach(([k,t])=>{const b=h("button");b.type="button";b.setAttribute("role","menuitemradio");b.setAttribute("aria-checked",k===tool);
+  Object.entries(TOOLS).filter(([k])=>k!=="chat").forEach(([k,t])=>{const b=h("button");b.type="button";b.setAttribute("role","menuitemradio");b.setAttribute("aria-checked",k===tool);
     const tx=h("span");tx.append(h("b",null,t.n),h("span",null,t.hint));b.append(h("span","g",t.g),tx);
     b.onclick=()=>{setTool(k);m.remove();q.focus()};m.append(b)});
   document.body.append(m);
@@ -688,14 +851,14 @@ function toolsMenu(){
 }
 function userMsg(text,img,t){
   const d=h("div","msg user");
-  if(t&&t!=="auto"){const tg=h("div","tag",TOOLS[t].g+" "+TOOLS[t].n);d.append(tg)}
+  if(t&&t!=="auto"&&t!=="chat"){const tg=h("div","tag",TOOLS[t].g+" "+TOOLS[t].n);d.append(tg)}
   if(img){const i=h("img");i.src=URL.createObjectURL(img);i.alt="Foto allegata";d.append(i)}
   if(text)d.append(document.createTextNode(text));
   thread.append(d);scroll();
 }
 function botMsg(label){
   const d=h("div","msg bot");const body=h("div","body");const th=h("div","think");
-  th.innerHTML='<svg class="spark" aria-hidden="true"><use href="#owl"/></svg>';const lt=h("span",null,label);th.append(lt);
+  th.innerHTML='<span class="orb think-orb" aria-hidden="true"><i></i></span>';const lt=h("span",null,label);th.append(lt);
   body.append(th);d.append(body);thread.append(d);scroll();
   const start=Date.now();const iv=setInterval(()=>{const s=Math.round((Date.now()-start)/1000);if(s>4)lt.textContent=label+" · "+s+" s"},1000);
   return{d,body,stop:()=>clearInterval(iv),setLabel:x=>{label=x}};
@@ -704,10 +867,11 @@ function followRow(d,kind,lead=[]){
   thread.querySelectorAll(".follow").forEach(f=>f.remove());
   const row=h("div","tools-row");lead.forEach(x=>row.append(x));
   const mk=h("svg");d.append(row);
+  if(kind==="text")return;
   const f=h("div","follow");(FOLLOW[kind]||FOLLOW.text).forEach(([label,t])=>{const b=h("button",null,label);b.type="button";b.onclick=()=>ask(label,t);f.append(b)});
   d.append(f);
 }
-function ib(iconId,label,fn){const b=h("button","ib");b.type="button";b.append(icon(iconId),document.createTextNode(label));b.onclick=fn;return b}
+function ib(iconId,label,fn){const b=h("button","ib");b.type="button";b.append(icon(iconId));b.setAttribute("aria-label",label);b.title=label;b.onclick=fn;return b}
 
 /* ===== panel ===== */
 const KIND={schema:"Schema",slides:"Presentazione",quiz:"Quiz",flash:"Flashcard",tabella:"Tabella",timeline:"Linea del tempo"};
@@ -777,7 +941,7 @@ function tx(tag,cls,obj,key,ed){
 function list(a,ed,cls){const ul=h("ul",cls||"bl");a=arr(a);a.forEach((_,j)=>ul.append(tx("li",null,a,j,ed)));return ul}
 function imgFrame(s,cls){
   const f=h("div","imgf "+(cls||""));
-  if(s.img){const im=h("img");im.src=s.img;im.alt=str(s.imagePrompt||s.title||"Immagine");im.draggable=false;f.append(im)}
+  if(s.img){const im=h("img");im.src=s.img;im.alt=str(s.imagePrompt||s.title||"Immagine");im.draggable=false;im.referrerPolicy="no-referrer";f.append(im);if(s.credit)f.append(h("span","cr",s.credit))}
   else{f.classList.add("ph");f.append(svgIcon(s.icon||"spark","ico phi"));if(s._busy)f.append(h("span","phl","Disegno l'immagine…"))}
   return f;
 }
@@ -846,13 +1010,15 @@ async function aiImage(desc,themeKey){
 function readPhoto(file){return new Promise((res,rej)=>{const img=new Image();const u=URL.createObjectURL(file);
   img.onload=()=>{const max=1600,sc=Math.min(1,max/Math.max(img.width,img.height));const c=document.createElement("canvas");c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
     c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.86))};img.onerror=()=>rej({code:"image_rejected"});img.src=u})}
-async function fillImages(deck,maxN){
-  const todo=deck.slides.filter(s=>!s.img&&s.imagePrompt).slice(0,maxN||3);if(!todo.length)return;
+async function fillImages(deck,maxN,mode){
+  const todo=deck.slides.filter(z=>!z.img&&(z.imagePrompt||z.photo)).slice(0,maxN||4);if(!todo.length)return;
   let done=0;const st=t=>{deck._status=t;deck._refresh?.()};
-  for(const s of todo){
-    s._busy=true;st("Disegno le immagini… "+(done+1)+" di "+todo.length);
-    try{s.img=await aiImage(s.imagePrompt,deck.theme)}catch(e){if(["not_granted","rate_limited","sampling_disabled"].includes(e?.code)){s._busy=false;break}}
-    s._busy=false;done++;deck._refresh?.();
+  for(const z of todo){
+    z._busy=true;st((mode==="ai"?"Disegno le immagini… ":"Cerco le foto… ")+(done+1)+" di "+todo.length);
+    try{if(mode==="ai")z.img=await aiImage(z.imagePrompt||z.title,deck.theme);
+      else{try{await photoFor(z)}catch{if(z.imagePrompt)z.img=await aiImage(z.imagePrompt,deck.theme)}}}
+    catch(e){if(["login","rate_limited"].includes(e?.code)){z._busy=false;break}}
+    z._busy=false;done++;deck._refresh?.();
   }
   st("");
 }
@@ -901,11 +1067,20 @@ function renderSlides(x){
     const gen=async()=>{const d=inp.value.trim()||str(s.title)||x.title;s.imagePrompt=d;ensureSlot();s._busy=true;paint(true);st.textContent="Disegno l'immagine… (20-60 s)";b.querySelectorAll("button,input").forEach(z=>z.disabled=true);
       try{s.img=await aiImage(d,x.theme);st.textContent="Fatto."}catch(e){st.textContent=ERR[e?.code]||"Immagine non riuscita, riprova."}finally{s._busy=false;paint(true);thumbsAll();b.querySelectorAll("button,input").forEach(z=>z.disabled=false)}};
     const up=h("label","nav upl");const fi=h("input");fi.type="file";fi.accept="image/*";fi.id="slide-photo";up.append(fi,document.createTextNode("Carica foto"));
-    fi.onchange=async()=>{const f=fi.files[0];if(!f)return;try{s.img=await readPhoto(f);ensureSlot();paint(true);thumbsAll();st.textContent="Foto aggiunta."}catch{st.textContent="Non riesco a leggere questa foto."}};
-    const r=h("div","r");r.append(inp,B([svgIcon("spark","i"),document.createTextNode("Genera")],gen,"ai"));
-    const r2=h("div","qk");r2.append(up);if(s.img){const rm=h("button",null,"Rimuovi immagine");rm.type="button";rm.onclick=()=>{delete s.img;if(s.kind==="image"||s.kind==="hero")s.kind="bullets";paint(true);thumbsAll();openBox(imgBox)};r2.append(rm)}
+    fi.onchange=async()=>{const f=fi.files[0];if(!f)return;try{s.img=await readPhoto(f);delete s.credit;ensureSlot();paint(true);thumbsAll();st.textContent="Foto aggiunta."}catch{st.textContent="Non riesco a leggere questa foto."}};
+    const r=h("div","r");r.append(inp,B([svgIcon("spark","i"),document.createTextNode("Disegna")],gen));
+    const pq=h("input");pq.id="photo-q";pq.placeholder="Cerca foto vere (meglio in inglese, es. Colosseum)";pq.value=s.photo||"";
+    const grid=h("div","pgrid");
+    const search=async()=>{const qq=pq.value.trim()||str(s.title);st.textContent="Cerco foto…";grid.innerHTML="";
+      try{const res=await findPhotos(qq,12);if(!res.length){st.textContent="Nessuna foto trovata: prova parole diverse, in inglese.";return}
+        st.textContent="Tocca una foto per usarla.";res.forEach(p=>{const t=h("button","pick");t.type="button";const im=h("img");im.src=p.url;im.alt="";im.loading="lazy";im.referrerPolicy="no-referrer";t.append(im);
+          t.onclick=()=>{s.img=p.url;s.credit=p.credit;s.photo=qq;ensureSlot();paint(true);thumbsAll();st.textContent="Foto inserita."};grid.append(t)})}
+      catch{st.textContent="Ricerca foto non riuscita, riprova."}};
+    pq.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();search()}});
+    const r0=h("div","r");r0.append(pq,B([svgIcon("map","i"),document.createTextNode("Cerca")],search,"ai"));
+    const r2=h("div","qk");r2.append(up);if(s.img){const rm=h("button",null,"Rimuovi immagine");rm.type="button";rm.onclick=()=>{delete s.img;delete s.credit;if(s.kind==="image"||s.kind==="hero")s.kind="bullets";paint(true);thumbsAll();openBox(imgBox)};r2.append(rm)}
     inp.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();gen()}});
-    b.append(r,r2,st);return b};
+    b.append(r0,grid,r,r2,st);return b};
   const move=d=>{const j=i+d;if(j<0||j>=x.slides.length)return;[x.slides[i],x.slides[j]]=[x.slides[j],x.slides[i]];i=j;x._i=i;paint(true);thumbsAll()};
   tools.append(B([svgIcon("spark","i"),document.createTextNode("Modifica con AI")],()=>openBox(aiBox),"ai"),
     B([svgIcon("mountain","i"),document.createTextNode("Immagine")],()=>{box?.remove();box=null;openBox(imgBox)}),eb,nb,
@@ -977,7 +1152,8 @@ function iconPng(name,color){
   return iconCache[key]=new Promise(res=>{const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=c.height=256;c.getContext("2d").drawImage(img,0,0,256,256);res(c.toDataURL("image/png"))};
     img.onerror=()=>res(null);img.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)});
 }
-function rasterize(url,w,h){return new Promise(res=>{if(!url)return res(null);if(!url.startsWith("data:image/svg"))return res(url);
+async function toDataUrl(url){try{const r=await fetch(url,{referrerPolicy:"no-referrer"});const b=await r.blob();return await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.onerror=()=>res(null);fr.readAsDataURL(b)})}catch{return null}}
+function rasterize(url,w,h){return new Promise(async res=>{if(!url)return res(null);if(/^https?:/.test(url))return res(await toDataUrl(url));if(!url.startsWith("data:image/svg"))return res(url);
   const img=new Image();img.onload=()=>{const c=document.createElement("canvas");c.width=w;c.height=h;const g=c.getContext("2d");
     const sc=Math.max(w/img.width,h/img.height),iw=img.width*sc,ih=img.height*sc;g.drawImage(img,(w-iw)/2,(h-ih)/2,iw,ih);res(c.toDataURL("image/png"))};
   img.onerror=()=>res(null);img.src=url})}
@@ -1070,7 +1246,7 @@ async function exportPptx(x,b){
   finally{b.disabled=false;lab.textContent=old}
 }
 /* ===== ask ===== */
-const LOAD={risolvi:"Sto risolvendo",spiega:"Preparo la spiegazione",riassunto:"Scrivo il riassunto",scrivi:"Sto scrivendo",schema:"Disegno lo schema",
+const LOAD={chat:"Sto pensando",risolvi:"Sto risolvendo",spiega:"Preparo la spiegazione",riassunto:"Scrivo il riassunto",scrivi:"Sto scrivendo",schema:"Disegno lo schema",
   slides:"Creo le slide",quiz:"Preparo le domande",flash:"Preparo le flashcard",tabella:"Costruisco la tabella",timeline:"Ordino gli eventi"};
 async function ask(text,forced,retryImg){
   text=(text||"").trim();const img=retryImg||photo;if((!text&&!img)||busy)return;
@@ -1082,11 +1258,11 @@ async function ask(text,forced,retryImg){
   q.value="";autosize();
   const s=await sampleReady;
   const bm=botMsg(LOAD[t]+"…");const {d,body}=bm;
-  if(!s){bm.stop();body.innerHTML="";body.append(errBox("Prima aggiungi la tua chiave Gemini gratuita.",null,null));const sb=h("button",null,"Apri impostazioni");sb.type="button";sb.onclick=()=>settings();body.querySelector(".err").append(sb);return}
+  if(!s){bm.stop();body.innerHTML="";body.append(errBox("Prima accedi con il tuo account.",null,null));const sb=h("button",null,"Accedi");sb.type="button";sb.onclick=()=>settings();body.querySelector(".err").append(sb);return}
   busy=true;ctl=new AbortController();send.classList.add("stop");send.innerHTML="";send.append(icon("i-stop"));send.setAttribute("aria-label","Ferma");
   const history=turns.slice(-12);while(history.length&&history[0].role!=="user")history.shift();
-  let extra="";const imgsOn=t==="slides"&&$("#so-img").checked;
-  if(t==="slides"){const n=$("#so-n").value,th=$("#so-theme").value;extra="\n\nImpostazioni scelte dallo studente: "+(n==="auto"?"numero di slide adatto all'argomento (circa 10)":n+" slide (salvo diversa indicazione nel testo)")+(th!=="auto"?"; theme \""+th+"\"":"")+(imgsOn?"; includi immagini: 2-3 slide con layout image o hero e un campo image anche nella cover, ogni image con una descrizione visiva precisa":"; nessuna immagine, niente layout image/hero")+"."}
+  let extra="";const imgMode=$("#so-img").value,imgsOn=t==="slides"&&imgMode!=="none";
+  if(t==="slides"){const n=$("#so-n").value,th=$("#so-theme").value;extra="\n\nImpostazioni scelte dallo studente: "+(n==="auto"?"numero di slide adatto all'argomento (circa 10)":n+" slide (salvo diversa indicazione nel testo)")+(th!=="auto"?"; theme \""+th+"\"":"")+(imgsOn?"; includi immagini: 3-4 slide con layout image o hero e immagine anche nella cover; per ognuna metti \"image\" (descrizione visiva precisa) e \"photo\" (parole chiave in inglese per trovare una foto reale e riconoscibile su Wikimedia Commons)":"; nessuna immagine, niente layout image/hero")+"."}
   const input=[{role:"user",content:RULES},...history,{role:"user",content:userText+"\n\n[Istruzioni per questa risposta]\n"+FORMAT[t]+extra}];
   const power=$("#power").value;
   const opts={cache:false,signal:ctl.signal,modelTier:power};
@@ -1103,20 +1279,23 @@ async function ask(text,forced,retryImg){
       followRow(d,t);
       turns.push({role:"user",content:userText},{role:"assistant",content:"[Ho creato: "+KIND[t]+" «"+(x.title||"")+"»] "+JSON.stringify(x).slice(0,6000)});
       openPanel(art);
-      if(t==="slides"&&imgsOn)fillImages(x,4);
+      if(t==="slides"&&imgsOn)fillImages(x,5,imgMode);
     }else{
       let started=false;
-      opts.onText=({text})=>{if(!started){bm.stop();started=true;body.className="body prose"}body.innerHTML=md(text);scroll()};
-      const {text:ans,truncated}=await s(input,opts);
-      body.insertAdjacentHTML("afterend",'<svg class="mark" aria-hidden="true"><use href="#owl"/></svg>');
-      followRow(d,"text",[ib("i-copy","Copia",async()=>{try{await navigator.clipboard.writeText(ans);toast("Copiato")}catch{toast("Copia non disponibile qui: tieni premuto sul testo per selezionarlo")}}),
+      opts.onText=({text})=>{if(!started){bm.stop();started=true;body.className="body prose streaming"}body.innerHTML=md(text);scroll()};
+      opts.search=webOn&&["chat","risolvi","spiega","riassunto","scrivi"].includes(t);
+      const res=await s(input,opts),ans=res.text,truncated=res.truncated;body.classList.remove("streaming");
+      if(arr(res.sources).length){const sb=h("div","sources");sb.append(h("b",null,"Fonti"));res.sources.slice(0,6).forEach(z=>{const a=h("a",null,z.title);a.href=z.url;a.target="_blank";a.rel="noopener";sb.append(a)});body.after(sb)}
+      d.insertAdjacentHTML("beforeend",'<svg class="mark" aria-hidden="true"><use href="#owl"/></svg>');
+      const sp=ib("i-voice","Ascolta",()=>speak(ans,sp));
+      followRow(d,"text",[ib("i-copy","Copia",async()=>{try{await navigator.clipboard.writeText(ans);toast("Copiato")}catch{toast("Copia non disponibile qui: tieni premuto sul testo per selezionarlo")}}),sp,
         ib("i-retry","Rigenera",()=>{turns.splice(-2,2);ask(text,t,img)})]);
       turns.push({role:"user",content:userText},{role:"assistant",content:ans});
       if(truncated)d.append(h("p","tip","Risposta tagliata: scrivi «continua»."));
     }
   }catch(e){
     bm.stop();
-    if(e?.code==="cancelled"){if(!e.text)d.remove();else{body.className="body prose";body.innerHTML=md(e.text)}}
+    body.classList.remove("streaming");if(e?.code==="cancelled"){if(!e.text)d.remove();else{body.className="body prose";body.innerHTML=md(e.text)}}
     else{
       if(e?.text&&!TOOLS[t].art){body.className="body prose";body.innerHTML=md(e.text);turns.push({role:"user",content:userText},{role:"assistant",content:e.text})}
       else body.innerHTML="";
@@ -1142,8 +1321,12 @@ q.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&!matchMedia("(
 $("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort();return}ask(q.value)});
 $("#toolBtn").onclick=e=>{e.stopPropagation();toolsMenu()};
 $("#settingsBtn").onclick=()=>settings();
-if(!KEY())setTimeout(()=>settings(true),300);
-else discoverModels(KEY()).catch(()=>{});
+thread.addEventListener("click",async e=>{const b=e.target.closest(".cc");if(!b)return;const t=b.closest(".code").querySelector("code").textContent;try{await navigator.clipboard.writeText(t);b.textContent="Copiato";setTimeout(()=>b.textContent="Copia",1500)}catch{toast("Copia non disponibile")}});
+let webOn=true;
+$("#webBtn").onclick=()=>{webOn=!webOn;$("#webBtn").classList.toggle("on",webOn);$("#webBtn").setAttribute("aria-pressed",webOn);toast(webOn?"Ricerca su Google attiva":"Ricerca su Google disattivata")};
+if(SR){$("#micBtn").hidden=false;$("#micBtn").onclick=()=>dictate($("#micBtn"))}
+if(!CRED())setTimeout(()=>settings(true),300);
+else discoverModels().catch(e=>{if(e?.code==="login"){LS.set("sara_cred",null);settings(true)}});
 $("#newchat").onclick=()=>{ctl?.abort();turns=[];clearPhoto();$("#panel").hidden=true;setTool("auto");emptyState()};
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){document.querySelector(".menu")?.remove();if(!document.fullscreenElement&&!$("#panel").hidden)$("#panel").hidden=true}});
 setTool("auto");emptyState();
