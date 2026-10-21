@@ -488,6 +488,17 @@ body{background:var(--bg)}
 .diag{white-space:pre-wrap;font-family:var(--mono);font-size:.74rem;background:var(--sunk);border-radius:10px;padding:10px;margin:0;max-height:40vh;overflow:auto}
 .err{flex-wrap:wrap}
 .err small{flex-basis:100%;word-break:break-word}
+
+/* composer: send button always visible and prominent */
+.crow{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.ctools{flex:1;min-width:0;display:flex;align-items:center;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent);mask-image:linear-gradient(90deg,#000 85%,transparent);padding-right:14px}
+.ctools::-webkit-scrollbar{display:none}
+.ctools>*{flex:none}
+.crow .go{margin-left:0;flex:none;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;box-shadow:0 8px 20px -6px var(--accent),0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.crow .go .i{width:22px;height:22px;stroke-width:2.6}
+.crow .go.stop{background:var(--ink);color:var(--bg);box-shadow:none}
+#webBtn.on{background:var(--accent-soft);color:var(--accent)}
+@media (max-width:380px){#toolBtn .i{display:inline}}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
@@ -531,12 +542,13 @@ body{background:var(--bg)}
         <label for="so-theme">Tema <select id="so-theme"><option value="auto">Auto</option><option value="notte">Notte</option><option value="carta">Carta</option><option value="oceano">Oceano</option><option value="menta">Menta</option><option value="aurora">Aurora</option><option value="accademia">Accademia</option></select></label>
         <label for="so-img">Immagini <select id="so-img"><option value="foto">Foto vere</option><option value="ai">Disegni AI</option><option value="none">Nessuna</option></select></label>
       </div>
-      <div class="crow">
+      <div class="crow"><div class="ctools">
         <label class="cbtn sq" id="photoBtn" title="Aggiungi foto"><input type="file" id="file" accept="image/*"><svg class="i"><use href="#i-plus"/></svg><span class="sr">Aggiungi foto</span></label>
-        <button class="cbtn on" id="webBtn" type="button" aria-pressed="true" title="Cerca su Google"><svg class="i"><use href="#i-globe"/></svg><span>Web</span></button>
+        <button class="cbtn" id="webBtn" type="button" aria-pressed="false" title="Cerca su Google"><svg class="i"><use href="#i-globe"/></svg><span>Web</span></button>
         <button class="cbtn sq" id="micBtn" type="button" aria-label="Detta a voce" hidden><svg class="i"><use href="#i-mic"/></svg></button>
         <button class="cbtn" id="toolBtn" type="button" aria-haspopup="menu"><svg class="i"><use href="#i-tools"/></svg><span id="toolLabel">Strumenti</span></button>
-        <label class="cbtn" for="power" title="Potenza"><select id="power"><option value="quick">Veloce</option><option value="default" selected>Normale</option></select></label>
+        <label class="cbtn" for="power" title="Potenza"><select id="power"><option value="quick">Veloce</option><option value="default" selected>Normale</option><option value="complex">Massima</option></select></label>
+        </div>
         <button class="go" id="send" type="submit" aria-label="Invia"><svg class="i"><use href="#i-up"/></svg></button>
       </div>
     </form>
@@ -696,7 +708,9 @@ async function discoverModels(cred){
   if(main){LS.set("sara_m_main",main);LS.set("sara_m_lite",lite)}
 }
 function b64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
-async function gemini(input,opts={},noSearch,useLite){
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+/* one request with bounded fallbacks: no web → no thinking setting → one retry after a pause */
+async function gemini(input,opts={},noSearch,noThink,retried){
   if(!CRED())throw{code:"login"};
   let turns=typeof input==="string"?[{role:"user",content:input}]:input.slice();
   let system="";if(turns.length>1&&turns[0].role==="user"&&turns[0].content===RULES){system=RULES;turns=turns.slice(1)}
@@ -706,35 +720,43 @@ async function gemini(input,opts={},noSearch,useLite){
   if(contents[0]?.role!=="user")contents.unshift({role:"user",parts:[{text:"Ciao"}]});
   const imgs=opts.images?[].concat(...[opts.images].map(x=>x instanceof FileList?[...x]:x)):[];
   for(const f of imgs)contents[contents.length-1].parts.push({inline_data:{mime_type:f.type||"image/jpeg",data:await b64(f)}});
-  const m=MODELS(),model=m.main;
-  const body={contents,generationConfig:{maxOutputTokens:opts.modelTier==="quick"?4096:16384}};
+  const model=MODELS().main,tier=opts.modelTier||"default";
+  const body={contents,generationConfig:{maxOutputTokens:tier==="quick"?4096:tier==="complex"?32768:16384}};
+  if(!noThink&&tier!=="complex")body.generationConfig.thinkingConfig={thinkingLevel:"low"};
   if(system)body.systemInstruction={parts:[{text:system}]};
   const search=opts.search&&!noSearch;if(search)body.tools=[{google_search:{}}];
+  const again=async(ns,nt)=>gemini(input,opts,ns,nt,retried);
+  const later=async()=>{if(retried)return null;await wait(1500);if(opts.signal?.aborted)throw{code:"cancelled"};return gemini(input,opts,noSearch,noThink,true)};
   let r;
   try{r=await fetch(SERVER+"/api/stream",{method:"POST",headers:{...authH(),"Content-Type":"application/json"},body:JSON.stringify({model,body}),signal:opts.signal})}
-  catch(e){if(e?.name==="AbortError")throw{code:"cancelled"};if(search)return gemini(input,opts,true);throw{code:"offline",message:String(e?.message||e)}}
+  catch(e){if(e?.name==="AbortError")throw{code:"cancelled"};if(search)return again(true,noThink);const x=await later();if(x)return x;throw{code:"offline",message:String(e?.message||e)}}
   if(!r.ok){let msg="";try{msg=(await r.json())?.error?.message||""}catch{}
-    if(r.status!==401&&search)return gemini(input,opts,true,useLite);
     if(r.status===401)throw{code:"login"};
+    if(r.status===400&&!noThink&&body.generationConfig.thinkingConfig)return again(noSearch,true);
+    if(search)return again(true,noThink);
     if(r.status===429)throw{code:"rate_limited",message:msg};
     if(r.status===403||/api key/i.test(msg))throw{code:"server_key",message:msg};
-    if(r.status===404){LS.set("sara_m_main",null);LS.set("sara_m_lite",null);throw{code:"model_missing",message:msg}}
+    if(r.status===404){LS.set("sara_m_main",null);throw{code:"model_missing",message:msg}}
     if(r.status===400&&/token|too large|exceeds/i.test(msg))throw{code:"prompt_too_large"};
+    if(r.status>=500){const x=await later();if(x)return x}
     throw{code:"upstream_error",message:("HTTP "+r.status+" "+msg).trim()}}
   const rd=r.body.getReader(),dec=new TextDecoder();let buf="",text="",finish="";const sources=new Map();
   try{
     for(;;){const {value,done}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});
       let nl;while((nl=buf.indexOf("\n"))>=0){const line=buf.slice(0,nl).trim();buf=buf.slice(nl+1);
         if(!line.startsWith("data:"))continue;let j;try{j=JSON.parse(line.slice(5))}catch{continue}
+        if(j.error)throw{code:j.error.code===429?"rate_limited":"upstream_error",message:j.error.message};
         const c=j.candidates?.[0];if(j.promptFeedback?.blockReason)throw{code:"refused"};
         arr(c?.groundingMetadata?.groundingChunks).forEach(g=>{if(g.web?.uri)sources.set(g.web.uri,g.web.title||g.web.uri)});
         const add=arr(c?.content?.parts).filter(p=>!p.thought&&p.text).map(p=>p.text).join("");
         if(c?.finishReason)finish=c.finishReason;
         if(add){text+=add;opts.onText?.({text,delta:add})}}}
-  }catch(e){if(e?.code)throw {...e,text};if(e?.name==="AbortError")throw{code:"cancelled",text:text||undefined};
-    if(search&&!text)return gemini(input,opts,true);throw{code:"upstream_error",message:"stream: "+String(e?.message||e),text:text||undefined}}
+  }catch(e){if(e?.name==="AbortError")throw{code:"cancelled",text:text||undefined};
+    if(!text){if(search)return again(true,noThink);if(e?.code!=="refused"&&e?.code!=="rate_limited"){const x=await later();if(x)return x}}
+    if(e?.code)throw {...e,text:text||undefined};
+    throw{code:"upstream_error",message:"stream: "+String(e?.message||e),text:text||undefined}}
   if(["SAFETY","PROHIBITED_CONTENT","BLOCKLIST"].includes(finish)&&!text)throw{code:"refused"};
-  if(!text.trim())throw{code:"empty_completion"};
+  if(!text.trim()){const x=await later();if(x)return x;throw{code:"empty_completion"}}
   return {text,truncated:finish==="MAX_TOKENS",sources:[...sources].map(([url,title])=>({url,title}))};
 }
 const sampleReady={then(res){res(CRED()?gemini:null)}};
@@ -1314,7 +1336,7 @@ async function ask(text,forced,retryImg){
     }else{
       let started=false;
       opts.onText=({text})=>{if(!started){bm.stop();started=true;body.className="body prose streaming"}body.innerHTML=md(text);scroll()};
-      opts.search=webOn&&["chat","risolvi","spiega","riassunto","scrivi"].includes(t);
+      opts.search=["chat","risolvi","spiega","riassunto","scrivi"].includes(t)&&(webOn||/\b(oggi|ieri|domani|stasera|attual|adesso|ultim[aeio]|notizi|news|prezz|cost[ao]|meteo|tempo che fa|chi ha vinto|risultat|classifica|orari|aperto|202[4-9]|recensioni|uscit[ao])/i.test(text));
       const res=await s(input,opts),ans=res.text,truncated=res.truncated;body.classList.remove("streaming");
       if(arr(res.sources).length){const sb=h("div","sources");sb.append(h("b",null,"Fonti"));res.sources.slice(0,6).forEach(z=>{const a=h("a",null,z.title);a.href=z.url;a.target="_blank";a.rel="noopener";sb.append(a)});body.after(sb)}
       d.insertAdjacentHTML("beforeend",'<svg class="mark" aria-hidden="true"><use href="#owl"/></svg>');
@@ -1353,8 +1375,8 @@ $("#form").addEventListener("submit",e=>{e.preventDefault();if(busy){ctl?.abort(
 $("#toolBtn").onclick=e=>{e.stopPropagation();toolsMenu()};
 $("#settingsBtn").onclick=()=>settings();
 thread.addEventListener("click",async e=>{const b=e.target.closest(".cc");if(!b)return;const t=b.closest(".code").querySelector("code").textContent;try{await navigator.clipboard.writeText(t);b.textContent="Copiato";setTimeout(()=>b.textContent="Copia",1500)}catch{toast("Copia non disponibile")}});
-let webOn=true;
-$("#webBtn").onclick=()=>{webOn=!webOn;$("#webBtn").classList.toggle("on",webOn);$("#webBtn").setAttribute("aria-pressed",webOn);toast(webOn?"Ricerca su Google attiva":"Ricerca su Google disattivata")};
+let webOn=false;
+$("#webBtn").onclick=()=>{webOn=!webOn;$("#webBtn").classList.toggle("on",webOn);$("#webBtn").setAttribute("aria-pressed",webOn);toast(webOn?"Ricerca su Google sempre attiva":"Ricerca su Google solo quando serve")};
 if(SR){$("#micBtn").hidden=false;$("#micBtn").onclick=()=>dictate($("#micBtn"))}
 if(!CRED())setTimeout(()=>settings(true),300);
 else discoverModels().catch(e=>{if(e?.code==="login"){LS.set("sara_cred",null);settings(true)}});
